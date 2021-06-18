@@ -14,16 +14,16 @@ class RegisteredUser(AbstractUser):
     email = models.EmailField(_('Email Address'), blank=False, null=False)
 
     def get_absolute_url(self):
-        return f'/{self.username}/'
+        return f'/{self.username}/{self.id}/'
     
 
 class PremiumUser(models.Model):
-    username = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
+    userdata = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
     premium = models.BooleanField(default=False)
     date_become = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        template = f'{self.username}: {self.premium}'
+        template = f'{self.userdata}: {self.premium}'
         return format(template)
 
     def save(self, *args, **kwargs):
@@ -34,19 +34,20 @@ class PremiumUser(models.Model):
         super(PremiumUser, self).save(*args, **kwargs)
 
 class Profile(models.Model):
-    username = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
+    userdata = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
     profile_pics = models.ImageField(upload_to='img/', blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        profile = f'{self.username}\'s Profile'
+        profile = f'{self.userdata}\'s Profile'
         return format(profile)
     
     def get_image(self):
-        return f'/{self.img.url}/'
+        if self.profile_pics:
+            return f'/{self.profile_pics.url}/'
 
     def get_absolute_url(self):
-        return f'/profile/{self.username}/'
+        return f'/{self.userdata}/{self.id}/profile/'
 
     def resize_image(self, profile_pics, size=(150, 150)):
         img = Image.open(profile_pics)

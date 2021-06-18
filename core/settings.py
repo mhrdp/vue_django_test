@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 
-    'backdoor.accounts'
+    'backdoor.accounts',
+    'backdoor.posts',
 ]
 
 REST_FRAMEWORK = {

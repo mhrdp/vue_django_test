@@ -11,21 +11,21 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login', 'date_joined',
         ]
 
-class ProfileSerializer(serializers.ModelSerializer):
-    username = UserSerializer()
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    userdata = UserSerializer()
 
     class Meta:
         model = Profile
         fields = [
-            'id', 'username', 'get_image', 'get_absolute_url',
+            'url', 'id', 'userdata', 'get_image', 'get_absolute_url',
             'bio',
         ]
 
-class PremiumUserSerializer(serializers.ModelSerializer):
-    username = UserSerializer()
+class PremiumUserSerializer(serializers.HyperlinkedModelSerializer):
+    userdata = UserSerializer()
 
     class Meta:
         model = PremiumUser
         fields = [
-            'id', 'premium', 'date_become', 'username'
+            'url', 'id', 'userdata', 'premium', 'date_become', 
         ]

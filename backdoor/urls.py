@@ -1,11 +1,17 @@
 from django.urls import path, include
-from .accounts import views
+
+from rest_framework import routers
+from rest_framework.routers import DefaultRouter
+
+from .accounts import users_api
+
+router = routers.DefaultRouter()
+router.register('user_profile', users_api.UserProfileView)
+router.register('is_premium', users_api.IsPremiumUser)
+
 
 urlpatterns = [
-    path('users/', views.UserAPI.as_view()),
-    path('users/premium/', views.PremiumUserAPI.as_view()),
-    path('users/register/', views.UserRegisterAPI.as_view()),
-    path('users/a/', views.premium_user_api),
+    path('accounts/', include(router.urls)),
 
     # REST Framework built-in login page for testing
     # Accessed by ../backdoor/login or ../backdor/logout
