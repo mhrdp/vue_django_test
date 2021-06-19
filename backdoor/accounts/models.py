@@ -1,15 +1,13 @@
 from django.db import models
 from django.utils import timezone
 
+from django.contrib.auth.models import AbstractUser
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.utils.translation import gettext_lazy as _
+
 from PIL import Image
 from io import BytesIO
 
-from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
-from django.core.files.uploadedfile import InMemoryUploadedFile
-
-
-# Create your models here.
 class RegisteredUser(AbstractUser):
     email = models.EmailField(_('Email Address'), blank=False, null=False)
 
@@ -18,6 +16,7 @@ class RegisteredUser(AbstractUser):
     
 
 class PremiumUser(models.Model):
+    # Some extra features for VIP Users
     userdata = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
     premium = models.BooleanField(default=False)
     date_become = models.DateTimeField(null=True, blank=True)
@@ -64,5 +63,24 @@ class Profile(models.Model):
 
         return profile_pics
     
-    
-    
+class MembersRoom(models.Model):
+    # Model for qualified user's membership room
+    userdata = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
+    membership_name = models.CharField(
+        max_length=25, null=False, blank=False
+        )
+    price = models.DecimalField(
+        default=0, max_digits=10, decimal_places=2,
+        null=False, blank=False,
+        )
+
+    def __str__(self):
+        return f'{self.userdata}\'s {self.membership_name}'
+
+class MembersRoomResident(models.Model):
+    # Model for all registered user that become member
+    membership_data = models.ForeignKey(MembersRoom, on_delete=models.CASCADE)
+    members = models.ManyToManyField(RegisteredUser)
+
+    def __str__(self):
+        return f'{self.membership_data} Membership Member'

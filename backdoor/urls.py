@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from rest_framework import routers
-from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
 
 from .accounts import users_api
 
@@ -16,4 +16,5 @@ urlpatterns = [
     # REST Framework built-in login page for testing
     # Accessed by ../backdoor/login or ../backdor/logout
     path('', include('rest_framework.urls')),
+    path('token/', views.obtain_auth_token),
 ]
