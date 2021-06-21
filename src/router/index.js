@@ -1,11 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/Home.vue";
+import Dashboard from "../views/Dashboard.vue";
 
 const routes = [
   {
     path: "/",
     name: "Login",
     component: Login,
+	meta: {
+		asGuest: true,
+	}
   },
   {
     path: "/about",
@@ -16,11 +20,46 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+	meta: {
+		requireLogin: true,
+	}
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+// Before each is a function that will executed before going to each routes
+// Do it like this to apply it globally, or wrote inside each route to apply it locally
+router.beforeEach((to, from, next) => {
+	if(to.matched.some(record => record.meta.requireLogin)){
+		if(localStorage.getItem('token') == null){
+			next({
+				name: 'Login',
+				query: {
+					to: to.path
+				}
+			})	
+		} else {
+			next()
+		}
+	} else if(to.matched.some(record => record.meta.asGuest)){
+		if(localStorage.getItem('token') == null){
+			next()
+		} else {
+			next({
+				name: 'Dashboard',
+			})
+		}
+	} else {
+		next()
+	}
+})
 
 export default router;
