@@ -3,16 +3,16 @@
       <div class="container-fluid">
         <a class="navbar-brand">Wlog</a>
 		
-		<div v-if="!$store.state.authenticated">
+		<div v-if="!this.$store.state.authenticated">
 			<div class="align-items-right">
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<router-link to="/" class="nav-link">
+						<router-link to="/login" class="nav-link">
 							Sign In
 						</router-link>
 					</li>
 					<li class="nav-item">
-						<router-link to="#" class="nav-link">
+						<router-link to="/register" class="nav-link">
 							Sign Up
 						</router-link>
 					</li>
@@ -50,26 +50,29 @@ export default {
     }
   },
   beforeCreate(){
-	this.$store.commit('setAuth', true)
+	// Check whether user is authenticated before start of every pages
+	if(localStorage.getItem('token')){
+		this.$store.commit('setAuth', true)
 	
-	const token = this.$store.state.token
-	if(token){
-		axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
-	} else {
-		axios.defaults.headers.common['Authorization'] = ''
+		const token = this.$store.state.token
+		if(token){
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+		}
 	}
+	
   },
   methods: {
 	signOut(){
+		// Refresh all credentials
 		localStorage.removeItem('token')
 		axios.defaults.headers.common['Authorization'] = ''
 		
 		this.$store.commit('setToken', '')
 		this.$store.commit('setAuth', false)
 		
-		this.$router.push('/')
+		this.$router.push('/login')
 	}
-  }
+  },
 }
 </script>
 
@@ -82,5 +85,9 @@ export default {
 .navbar {
   box-shadow: 0 1px 5px 1px #cccccc;
   background-color: #fff;
+}
+
+html {
+	overflow-x: hidden;
 }
 </style>

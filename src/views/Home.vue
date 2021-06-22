@@ -1,14 +1,14 @@
 <template>
   <div class="row align-items-center h-80vh">
     <div class="col-12 col-sm-6">
-      <div class="card text-start mx-auto" style="width:25rem">
+      <div class="card text-start mx-auto" style="width:70%">
         <div class="card-body">
           <h4 class="card-title"><strong>Log In</strong></h4>
-          <p class="card-subtitle mt-2 text-muted">Please enter your username and password</p>
+          <p class="card-subtitle text-muted fs-7">Please enter your username and password</p>
 
           <hr/>
 
-          <div class="alert alert-danger fs-6" role="alert" v-if="errors.length">
+          <div class="alert alert-danger fs-7" role="alert" v-if="errors.length">
             <p v-for="error in errors" v-bind:key="error">
               <i class="bi bi-exclamation-diamond-fill"></i> {{error}}
 			</p>
@@ -16,11 +16,15 @@
           </div>
       
           <form method="POST" class="mt-4 mb-5" @submit.prevent="submitForm">
-            <label for="username">Username</label>
-            <input id="username" name="username" type="text" class="form-control" placeholder="Username" v-model="username" required>
-
-            <label for="password" class="mt-2">Password</label>
-            <input id="password" name="password" type="password" class="form-control" placeholder="Password" v-model="password" required>
+			<div class="form-floating mb-2">
+				<input id="username" name="username" type="text" class="form-control floating-input" placeholder="Username" v-model="username" required>
+				<label for="username">Username</label>
+			</div>
+			
+			<div class="form-floating">
+				<input id="password" name="password" type="password" class="form-control floating-input" placeholder="Password" v-model="password" required>
+				<label for="password">Password</label>
+			</div>
             <div class="d-grid mt-3">
               <button class="btn btn-primary">Log In</button>
             </div>
@@ -97,6 +101,10 @@ export default {
 <style scoped>
   .h-80vh {
     height: 80vh;
+  }
+  
+  .fs-7 {
+	font-size: 0.9rem !important;
   }
 
   .row {

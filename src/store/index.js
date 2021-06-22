@@ -16,11 +16,17 @@ export default createStore({
       state.authenticated = true
     },
 	
+	logOut(state){
+		state.token = null
+		state.authenticated = false
+	}
+	
 	/*removeToken(state, token){
 		state.token = ''
 		state.isAuthenticated = false
 	},*/
   },
-  actions: {},
+  actions: {
+  },
   modules: {},
 });

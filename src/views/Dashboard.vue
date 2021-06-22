@@ -22,4 +22,8 @@
 .p-15 {
 	padding: 15px;
 }
+
+.fs-7 {
+	font-size: .9rem !important;
+}
 </style>
