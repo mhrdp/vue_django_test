@@ -35,7 +35,7 @@ class PremiumUser(models.Model):
 class Profile(models.Model):
     userdata = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
     profile_pics = models.ImageField(upload_to='img/', blank=True, null=True)
-    bio = models.TextField(blank=True, null=True)
+    bio = models.TextField(blank=True, null=True, max_length=255)
 
     def __str__(self):
         profile = f'{self.userdata}\'s Profile'

@@ -32,7 +32,7 @@
 
           <hr />
 
-          <h6 class="card-subtitles mt-2 text-muted">Don't have account? How about <a href="#">Sign up</a>?</h6>
+          <h6 class="card-subtitles mt-2 text-muted">Don't have account? How about <router-link to="/register">Sign up</router-link>?</h6>
         </div>
       </div>
     </div>
@@ -45,7 +45,8 @@
 
 <script>
 // @ is an alias to /src
-import axios from 'axios'
+import axios from 'axios';
+import {toast} from 'bulma-toast';
 
 export default {
   name: 'Login',
@@ -63,6 +64,10 @@ export default {
   },
   methods: {
     async submitForm(){
+	  // Initialize the array once again to prevent it being stacked
+	  // This essentially refresh the array for each request
+	  this.errors = []
+	  
       axios.defaults.headers.common['Authorization'] = ''
 	  localStorage.removeItem('token')
 	  
@@ -80,12 +85,23 @@ export default {
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 		localStorage.setItem('token', token)
 		
+		toast({
+			message: 'Welcome home! Enjoy your time here!',
+			type: 'is-success',
+			dismissable: true,
+			pauseOnHover: true,
+			duration: 5000,
+			position: 'top-center',
+			animate: {in: 'fadeIn', out: 'fadeOut'},
+		})
+		
 		const toPath = this.$route.query.to || '/dashboard'
 		this.$router.push(toPath)
 	  })
 	  .catch(error => {
 		if(error.response){
 			for (const property in error.response.data){
+				// This is using backquote (`), you need a backquote to initialize Vue's components inside a string.
 				this.errors.push(`${property}: ${error.response.data[property]}`)
 			}
 		} else {

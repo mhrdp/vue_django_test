@@ -87,6 +87,11 @@ export default {
   background-color: #fff;
 }
 
+.is-success {
+	background-color: #48c78e;
+	color: #fff;
+}
+
 html {
 	overflow-x: hidden;
 }

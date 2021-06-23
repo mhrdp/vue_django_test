@@ -2,8 +2,6 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from rest_framework.authtoken.models import Token
-
 from .models import Profile, PremiumUser
 
 user_model = settings.AUTH_USER_MODEL
@@ -19,8 +17,3 @@ def save_default_profile(sender, instance, **kwargs):
     # This is the path to the models
     instance.profile.save()
     instance.premiumuser.save()
-
-@receiver(post_save, sender=user_model)
-def generate_token_on_user_create(sender, instance, created, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
