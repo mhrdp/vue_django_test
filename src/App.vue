@@ -1,7 +1,17 @@
 <template>
-  <nav class="navbar navbar-expand-lg sticky-top">
+  <nav class="navbar navbar-expand-lg fixed-top">
       <div class="container-fluid">
-        <a class="navbar-brand">Wlog</a>
+		<div class="d-inline-block">
+			<div v-if="this.$store.state.authenticated">
+				<a class="p-2" data-bs-toggle="offcanvas" href="#sidebar" role="button" aria-controls="sidebar" style="margin-right:15px;">
+					<i class="bi bi-three-dots"></i>
+				</a>
+				<router-link to="/dashboard" class="navbar-brand test-start">Wlog</router-link>
+			</div>
+			<div v-else>
+				<router-link to="/login" class="navbar-brand test-start">Wlog</router-link>
+			</div>
+		</div>
 		
 		<div v-if="!this.$store.state.authenticated">
 			<div class="align-items-right">
@@ -37,6 +47,37 @@
 		</div>
       </div>
     </nav>
+	<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+	  <div class="offcanvas-header">
+		<h5 class="offcanvas-title" id="sidebarLabel">Menu</h5>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	  </div>
+	  <hr/>
+	  <div class="offcanvas-body">
+		<h6 class="card-subtitle">GENERAL</h6>
+		<div class="list-group list-group-flush">
+		  <a class="list-group-item list-group-item-action dashboard-active" href="/dashboard">
+			<i class="bi bi-tv-fill p-2"></i>Control Room
+		  </a>
+		  <a class="list-group-item list-group-item-action private-active" href="#">
+			<i class="bi bi-unlock-fill p-2"></i>Private Space
+		  </a>
+		  <a class="list-group-item list-group-item-action community-active" href="#">
+			<i class="bi bi-people-fill p-2"></i>Community Space
+		  </a>
+		  <a class="list-group-item list-group-item-action town-active" href="#">
+			<i class="bi bi-megaphone-fill p-2"></i>Town Hall
+		  </a>
+		</div>
+		  
+		<h6 class="card-subtitle mt-4">EXTRAS</h6>
+		<div class="list-group list-group-flush">
+		  <a class="list-group-item list-group-item-action dashboard-active" href="/dashboard">
+			<i class="bi bi-wrench p-2"></i>Settings
+		  </a>
+		</div>
+	  </div>
+	</div>
   <router-view />
 </template>
 
@@ -90,6 +131,11 @@ export default {
 .is-success {
 	background-color: #48c78e;
 	color: #fff;
+}
+
+.offcanvas-start {
+	/* override sidebar's default width */
+	width: 300px !important;
 }
 
 html {

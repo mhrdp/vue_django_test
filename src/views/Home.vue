@@ -124,7 +124,7 @@ export default {
   }
 
   .row {
-    padding: 15px;
+    padding: 100px 15px 50px 15px;
   }
 
   .card {

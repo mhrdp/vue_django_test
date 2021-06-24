@@ -1,5 +1,5 @@
 <template>
-	<div class="row">
+	<div class="outside row">
 		<div class="col-12 col-md-6">
 			<h2>Register Now</h2>
 		</div>
@@ -12,29 +12,36 @@
 				
 				<div class="card-body">
 					<form method="POST" @submit.prevent="submitForm" class="row g-2">
-					
-						<div class="alert alert-danger fs-7" v-if="error.length">
-							<p v-for="err in error" v-bind:key="err">{{err}}</p>
-						</div>
 						
-						<p class="card-subtitle fs-7 text-muted">
+						<p class="card-subtitle text-muted">
 							<strong>Login Data</strong>
 						</p>
 						
 						<hr/>
+						
+						<div class="alert alert-danger fs-7" v-if="error.length">
+							<p v-for="err in error" v-bind:key="err">{{err}}</p>
+						</div>
 						
 						<div class="form-floating mb-2 col-12">
 							<input class="form-control floating-input" type="text" id="username" placeholder="Username" name="username" v-model="userdata.username" required>
 							<label for="username">
 								Username<span style="color:red">*</span>
 							</label>
+							<span class="text-muted fs-8">
+								<i class="bi bi-exclamation-circle"></i> Unique with 150 characters maximal, no white space.
+							</span>
 						</div>
+						
 						
 						<div class="form-floating mb-2 col-12">
 							<input class="form-control floating-input" type="password" id="password" placeholder="Password" name="password" v-model="userdata.password" required>
 							<label for="password">
 								Password<span style="color:red">*</span>
 							</label>
+							<span class="text-muted fs-8">
+								<i class="bi bi-exclamation-circle"></i> Minimum 8 in length with combination of letters and numbers.
+							</span>
 						</div>
 						
 						<div class="form-floating mb-2 col-12">
@@ -42,6 +49,9 @@
 							<label for="password2">
 								Repeat Password<span style="color:red">*</span>
 							</label>
+							<span class="text-muted fs-8">
+								<i class="bi bi-exclamation-circle"></i> Repeat your password correctly.
+							</span>
 						</div>
 						
 						<div class="form-floating mb-5 col-12">
@@ -49,9 +59,12 @@
 							<label for="email">
 								Email<span style="color:red">*</span>
 							</label>
+							<span class="text-muted fs-8">
+								<i class="bi bi-exclamation-circle"></i> Please enter your valid email address.
+							</span>
 						</div>
 						
-						<p class="card-subtitle fs-7 text-muted">
+						<p class="card-subtitle text-muted">
 							<strong>User Data</strong>
 						</p>
 						<hr/>
@@ -221,8 +234,16 @@ export default {
 	font-size: 0.9rem !important;
 }
 
+.fs-8 {
+	font-size: 0.7rem !important;
+}
+
+.outside.row {
+	padding: 100px 15px 50px 15px;
+}
+
 .row {
-	padding: 50px 15px 50px 15px;
+	padding: 15px 15px 15px 15px;
 }
 
 .card {
