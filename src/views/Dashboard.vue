@@ -47,10 +47,16 @@
 			<div class="col-12 col-md-6">
 				<h5 class="card-title">Post Something:</h5>
 				<form method="POST" @submit.prevent="submitForm" class="mb-4">
-					<textarea class="form-control" style="height:130px;" placeholder="Want to write something?" v-model="post" @keyup="minCharRequired"></textarea>
+					<textarea
+						class="form-control" 
+						style="height:130px;" 
+						placeholder="Want to write something?" 
+						v-model="post" 
+						@keyup="minCharRequired">
+					</textarea>
 					
 					<div class="d-grid d-flex gap-3 mt-2 justify-content-end align-items-center">
-						<span v-if="charLeft < 255">
+						<span v-if="charLeft < 300">
 							<span style="color:red">{{charLeft}}</span>
 						</span>
 						<span v-else>

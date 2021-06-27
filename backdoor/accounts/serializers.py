@@ -10,8 +10,21 @@ class UserSerializer(serializers.ModelSerializer):
             'user_permissions', 'is_staff', 'is_active', 'is_superuser',
             'last_login', 'date_joined',
         ]
+        
+        read_only_fields = (
+            'is_active', 'is_staff', 'is_superuser',
+            'last_login', 'date_joined'
+        )
+        
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            }
+        }
     
     # hash the password on create so Django could read it
+    # validated_data is a built-in authentication of DRF, it return querysets similar to Django
+    # the format is {ModelName: {Key: {Value}}, ...}
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         is_active = validated_data.pop('is_active', True)
@@ -31,21 +44,32 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    userdata = UserSerializer()
+class ProfileSerializer(serializers.ModelSerializer):
+    # userdata = UserSerializer()
+    
+    # This is to limit what to be show from external model
+    # userdata is the name of the field that hold User model
+    # that has 1-to-1 relationship with Profile model
+    username = serializers.CharField(source='userdata.username')
+    
 
     class Meta:
         model = Profile
         fields = [
-            'url', 'id', 'userdata', 'get_image', 'get_absolute_url',
+            'id', 'username', 'get_image', 'get_absolute_url',
             'bio',
         ]
 
-class PremiumUserSerializer(serializers.HyperlinkedModelSerializer):
-    userdata = UserSerializer()
+class PremiumUserSerializer(serializers.ModelSerializer):
+    # userdata = UserSerializer()
+    
+    # This is to limit what to be show from external model
+    # userdata is the name of the field that hold User model
+    # that has 1-to-1 relationship with Profile model
+    username = serializers.CharField(source='userdata.username')
 
     class Meta:
         model = PremiumUser
         fields = [
-            'url', 'id', 'userdata', 'premium', 'date_become', 
+            'id', 'username', 'premium', 'date_become', 
         ]

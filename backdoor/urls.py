@@ -7,19 +7,27 @@ from rest_framework_simplejwt.views import (
 )
 
 from .accounts import users_api
+from .posts import posts
 
+# Router for Viewset Class Based
 if settings.DEBUG:
     router = routers.DefaultRouter()
 else:
     router = routers.SimpleRouters()
 
-router.register('user_profile', users_api.UserProfileView)
-router.register('is_premium', users_api.IsPremiumUser)
-router.register('users', users_api.UserView)
+# Viewset GET
+router.register('user-profile', users_api.GetProfileView)
+router.register('is-premium', users_api.IsPremiumUser)
+
+# Viewset POST
+router.register('users', users_api.CreateUserView)
 
 
 urlpatterns = [
-    path('accounts/', include(router.urls)),
+    path('api/', include(router.urls)),
+    
+    path('api/posts/', posts.CreatePostView.as_view()),
+    path('api/posts/<str:username>/', posts.GetUserPostView.as_view()),
 
     # REST Framework built-in login page for testing
     # Accessed by ../backdoor/rest/login or ../backdor/rest/logout

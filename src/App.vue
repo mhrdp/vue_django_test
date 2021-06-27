@@ -54,7 +54,15 @@
 	  </div>
 	  <hr/>
 	  <div class="offcanvas-body">
-		<h6 class="card-subtitle">GENERAL</h6>
+		<h6 class="card-subtitle">PUBLIC</h6>
+		
+		<div class="list-group list-group-flush">
+		  <a class="list-group-item list-group-item-action town-active" href="#">
+			<i class="bi bi-megaphone-fill p-2"></i>Town Hall
+		  </a>
+		</div>
+		
+		<h6 class="card-subtitle">COMMUNITY</h6>
 		<div class="list-group list-group-flush">
 		  <a class="list-group-item list-group-item-action dashboard-active" href="/dashboard">
 			<i class="bi bi-tv-fill p-2"></i>Control Room
@@ -64,9 +72,6 @@
 		  </a>
 		  <a class="list-group-item list-group-item-action community-active" href="#">
 			<i class="bi bi-people-fill p-2"></i>Community Space
-		  </a>
-		  <a class="list-group-item list-group-item-action town-active" href="#">
-			<i class="bi bi-megaphone-fill p-2"></i>Town Hall
 		  </a>
 		</div>
 		  

@@ -175,7 +175,7 @@ export default {
 				}
 				
 				await axios
-					.post('/backdoor/accounts/users/', formData)
+					.post('/backdoor/api/users/', formData)
 					.then(response => {
 						
 						if(response.data){

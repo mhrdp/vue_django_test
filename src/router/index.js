@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/Home.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Register from "../views/Register.vue";
+import TownHall from "../views/TownHall.vue";
 
 const routes = [
   {
@@ -37,6 +38,15 @@ const routes = [
 		asGuest: true,
 	}
   },
+  {
+    path: "/town-hall",
+    name: "TownHall",
+    component: TownHall,
+	meta: {
+		asGuest: true,
+		requireLogin: true,
+	}
+  },
 ];
 
 const router = createRouter({
@@ -44,6 +54,7 @@ const router = createRouter({
   routes,
 });
 
+// Route guard
 // Before each is a function that will executed before going to each routes
 // Do it like this to apply it globally, or wrote inside each route to apply it locally
 router.beforeEach((to, from, next) => {
