@@ -2,6 +2,13 @@ from rest_framework import serializers
 
 from .models import RegisteredUser, PremiumUser, Profile
 
+class GetUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegisteredUser
+        fields = [
+            'id'
+        ]
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = RegisteredUser

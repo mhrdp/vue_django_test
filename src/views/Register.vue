@@ -196,7 +196,7 @@ export default {
 					.catch(error => {
 						if(error.response){
 							for(const property in error.response.data){
-								// This is using backquote (`), you need a backquote to initialize Vue's components inside a string.
+								// This is using backquote (`), you need a backquote for string formatting in Vue.
 								this.error.push(`${property}: ${error.response.data[property]}`)
 							}
 							console.log(JSON.stringify(error.response.data))

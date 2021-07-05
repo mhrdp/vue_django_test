@@ -59,7 +59,7 @@ const router = createRouter({
 // Do it like this to apply it globally, or wrote inside each route to apply it locally
 router.beforeEach((to, from, next) => {
 	if(to.matched.some(record => record.meta.requireLogin)){
-		if(localStorage.getItem('accessToken') == null){
+		if(localStorage.getItem('token') == null){
 			next({
 				name: 'Login',
 				query: {
@@ -70,7 +70,7 @@ router.beforeEach((to, from, next) => {
 			next()
 		}
 	} else if(to.matched.some(record => record.meta.asGuest)){
-		if(localStorage.getItem('accessToken') == null){
+		if(localStorage.getItem('token') == null){
 			next()
 		} else {
 			next({

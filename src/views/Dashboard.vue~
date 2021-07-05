@@ -1,6 +1,6 @@
 <template>
 	<div class="outside row">
-		<h1 class="p-15">{{user}}'s Dashboard</h1>
+		<h1 class="p-15">{{user_pk}} {{user}}'s Dashboard</h1>
 		
 		<!-- Latest Post -->
 		<div class="row">

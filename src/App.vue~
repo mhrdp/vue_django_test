@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		
-		<div v-if="!this.$store.state.authenticated">
+		<div v-if="this.$store.state.authenticated">
 			<div class="align-items-right">
 				<ul class="navbar-nav">
 					<li class="nav-item">
@@ -107,7 +107,7 @@ export default {
   },
   beforeCreate(){
 	// Check whether user is authenticated before start of every pages
-	if(localStorage.getItem('accessToken')){
+	if(localStorage.getItem('token')){
 		this.$store.commit('setAuth', true)
 	
 		const token = this.$store.state.token
@@ -120,10 +120,10 @@ export default {
   methods: {
 	signOut(){
 		// Refresh all credentials
-		localStorage.removeItem('accessToken')
+		localStorage.removeItem('token')
 		axios.defaults.headers.common['Authorization'] = ''
 		
-		this.$store.commit('setAccessToken', '')
+		this.$store.commit('setToken', '')
 		this.$store.commit('setAuth', false)
 		
 		this.$router.push('/login')

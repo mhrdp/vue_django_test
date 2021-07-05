@@ -92,6 +92,7 @@ export default{
 							'headers': `Bearer ${token}`
 						})
 					.then(response => {
+						//axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 						if(response.data){
 							toast({
 								message: 'Your post has been successfully posted',

@@ -25,6 +25,7 @@ router.register('users', users_api.CreateUserView)
 
 urlpatterns = [
     path('api/', include(router.urls)),
+  
 
     path('api/posts/', posts.CreatePostView.as_view()),
     path('api/posts/<str:username>/', posts.GetUserPostView.as_view()),
