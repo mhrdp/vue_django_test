@@ -2,9 +2,8 @@ from django.conf import settings
 from django.urls import path, include
 
 from rest_framework import routers
-from rest_framework_simplejwt.views import (
-    TokenRefreshView,
-)
+
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from .accounts import users_api
 from .posts import posts
@@ -29,6 +28,8 @@ urlpatterns = [
     path('api/posts/', posts.CreatePostView.as_view()),
     path('api/posts/<str:username>/', posts.GetUserPostView.as_view()),
     path('api/posts/<str:post_username>/<slug:post_slug>/', posts.GetDetailPostView.as_view()),
+
+    path('api/user/', users_api.CurrentUserView.as_view()),
 
     # REST Framework built-in login page for testing
     # Accessed by ../backdoor/rest/login or ../backdor/rest/logout

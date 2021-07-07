@@ -12,7 +12,10 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView
+
+from rest_framework_simplejwt.views import (
+        TokenObtainPairView, TokenRefreshView
+)
 
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
@@ -28,6 +31,9 @@ class TokenPOSTMethod(TokenObtainPairView):
     
     # disable web browsable API
     renderer_classes = [JSONRenderer]
+
+class TokenRefreshMethod(TokenRefreshView):
+    permission_classes = [AllowAny]
 
 class CreateUserView(ModelViewSet):
     permission_classes = [AllowAny]
@@ -48,7 +54,6 @@ class CreateUserView(ModelViewSet):
         else:
             return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
 
-                
 class GetProfileView(ModelViewSet):
     authentication_classes = [
         SessionAuthentication, BasicAuthentication
@@ -68,3 +73,8 @@ class IsPremiumUser(ModelViewSet):
 
     queryset = PremiumUser.objects.all()
     serializer_class = PremiumUserSerializer
+
+class CurrentUserView(APIView):
+    def get(self, request, format=None):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)

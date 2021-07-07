@@ -12,7 +12,10 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView
+
+from rest_framework_simplejwt.views import (
+        TokenObtainPairView
+)
 
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
@@ -67,3 +70,8 @@ class IsPremiumUser(ModelViewSet):
 
     queryset = PremiumUser.objects.all()
     serializer_class = PremiumUserSerializer
+
+class CurrentUserView(APIView):
+    def get(self, request, format=None):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)

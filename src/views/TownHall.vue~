@@ -3,6 +3,8 @@
 		<div class="outside row">
 			<div class="col-md-3">
 				<h4>Trending</h4>
+				<button @click="getCurrentUser">Current User</button>
+				<p>Look at console for output</p>
 			</div>
 			
 			<div class="col-12 col-md-9">
@@ -12,7 +14,8 @@
 						v-model="post"
 						placeholder="Thoughts?"
 						style="height:130px"
-						@keyup="minCharRequired">
+						@keyup="minCharRequired"
+						name="post">
 					</textarea>
 					
 					<div class="row mt-2">
@@ -37,6 +40,7 @@
 <script>
 import axios from 'axios';
 import {toast} from 'bulma-toast';
+import {getAPI} from '../refresh_api';
 
 export default{
 	name: 'TownHall',
@@ -47,7 +51,7 @@ export default{
 			success: [],
 			timeline: [],
 
-			user_id: '',
+			user_id: 1,
 			
 			// Character count of the textarea
 			charLeft: 0,
@@ -62,6 +66,24 @@ export default{
 		console.log(localStorage.getItem('refreshToken'))
 	},
 	methods: {
+		getCurrentUser(){
+			//const token = localStorage.getItem('accessToken')
+
+			getAPI
+				.get('/backdoor/api/user/', {
+					headers: {
+						'Authorization': `Bearer ${this.$store.state.accessToken}`
+					}
+				})
+				.then(response => {
+					console.log(response.data.id)
+					console.log(response.data.username)
+				})
+				.catch(error => {
+					console.log(error.response)
+				})
+		},
+
 		minCharRequired(){
 			let left = this.post.length
 			this.charLeft = left
@@ -80,19 +102,18 @@ export default{
 			}
 			
 			if(!this.errors.length){
-				const postData = {
+				const formData = {
 					post: this.post,
 				}
 
-				const token = localStorage.getItem('accessToken')
-				//const cred = axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
-
-				await axios
-					.post('/backdoor/api/posts/', postData, {
-							'headers': `Bearer ${token}`
+				await getAPI
+					.post('/backdoor/api/posts/', formData, {
+							headers: {
+								'Authorization': `Bearer ${this.$store.state.accessToken}`
+							}
 						})
 					.then(response => {
-						//axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+						console.log(response.data)
 						if(response.data){
 							toast({
 								message: 'Your post has been successfully posted',
@@ -114,9 +135,11 @@ export default{
 								this.errors.push(`${property}: ${error.response.data[property]}`)
 							}
 							console.log(JSON.stringify(error))
-						} else {
-							this.errors.push('Something went wrong!')
+						} else if(error.request){
+							//this.errors.push('Something went wrong!')
 							console.log(JSON.stringify(error))
+						} else {
+							console.log(error.message)
 						}
 					})
 			}

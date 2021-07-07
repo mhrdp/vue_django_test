@@ -10,7 +10,7 @@ from rest_framework.generics import (
 
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
@@ -22,14 +22,47 @@ class CreatePostView(ListCreateAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostModelSerializer
 
+    def create(self, request):
+        serializer = self.serializer_class(
+                data=request.data,
+                context={
+                    'request': request,
+                }
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response('Success')
+        else:
+            return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
     def perform_create(self, serializer):
-        serializer.save(username=self.request.user)
+        serializer.save(username=request.user)
+
+#class CreatePostView(APIView):
+#    def post(self, request, format=None):
+#        serializer = PostModelSerializer(
+#                data=request.data,
+#                context={
+#                    'username': request.user
+#                    }
+#        )
+#        if serializer.is_valid():
+#            serializer.save()
+#            return Response(serializer.data, status=HTTP_201_CREATED)
+#        else:
+#            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+#    def get(self, request, format=None):
+#        queryset = PostModel.objects.all()
+#        serializer = PostModelSerializer(queryset, many=True)
+#        return Response(serializer.data)
 
 # Get specific user's post
 class GetUserPostView(ListAPIView):
     serializer_class = PostModelSerializer
     
     def get_queryset(self):
+        # get username's value from URL, refer to urls.py
         username = self.kwargs['username']
         return PostModel.objects.filter(
             userdata__username=username

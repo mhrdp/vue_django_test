@@ -13,7 +13,13 @@
 			</div>
 		</div>
 		
-		<div v-if="!this.$store.state.authenticated">
+		<div class="align-items-right">
+			<a class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle Navigation">
+				<span class="navbar-toggler-icon"><i class="bi bi-three-dots-vertical"></i></span>
+			</a>
+		</div>
+		
+		<div v-if="!this.$store.state.authenticated" class="collapse navbar-collapse" id="navbarCollapse">
 			<div class="align-items-right">
 				<ul class="navbar-nav">
 					<li class="nav-item">
@@ -30,7 +36,7 @@
 			</div>
 		</div>
 		
-		<div v-else>
+		<div v-else class="collapse navbar-collapse" id="navbarCollapse">
 			<div class="align-items-right">
 				<ul class="navbar-nav">
 					<li class="nav-item">
@@ -60,7 +66,14 @@
 	<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
 	  <div class="offcanvas-header">
 		<h5 class="offcanvas-title" id="sidebarLabel">Menu</h5>
-		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
+		<div v-if="!this.$store.state.authenticated">
+			<span></span>
+		</div>
+		<div v-else>
+			<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+
 	  </div>
 	  <hr/>
 	  <div class="offcanvas-body">
@@ -109,13 +122,7 @@ export default {
 	// Check whether user is authenticated before start of every pages
 	if(localStorage.getItem('accessToken')){
 		this.$store.commit('setAuth', true)
-	
-		const token = this.$store.state.token
-		if(token){
-			axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
-		}
 	}
-	
   },
   methods: {
 	signOut(){
@@ -123,7 +130,6 @@ export default {
 		localStorage.removeItem('accessToken')
 		axios.defaults.headers.common['Authorization'] = ''
 		
-		this.$store.commit('setAccessToken', '')
 		this.$store.commit('setAuth', false)
 		
 		this.$router.push('/login')
