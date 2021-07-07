@@ -26,8 +26,8 @@ urlpatterns = [
     path('api/', include(router.urls)),
 
     path('api/posts/', posts.CreatePostView.as_view()),
-    path('api/posts/<str:username>/', posts.GetUserPostView.as_view()),
-    path('api/posts/<str:post_username>/<slug:post_slug>/', posts.GetDetailPostView.as_view()),
+    path('api/posts/<int:pk>/', posts.GetUserPostView.as_view()),
+    path('api/posts/<int:post_username_pk>/<slug:post_slug>/', posts.GetDetailPostView.as_view()),
 
     path('api/user/', users_api.CurrentUserView.as_view()),
 

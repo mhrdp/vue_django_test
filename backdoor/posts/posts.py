@@ -18,44 +18,23 @@ from .models import PostModel
 from .serializers import PostModelSerializer
 
 # Create your views here.
-class CreatePostView(ListCreateAPIView):
-    queryset = PostModel.objects.all()
-    serializer_class = PostModelSerializer
+class CreatePostView(APIView):
+    def post(self, request, format=None):
+        data = request.data
+        data['userdata'] = request.user.pk
 
-    def create(self, request):
-        serializer = self.serializer_class(
-                data=request.data,
-                context={
-                    'request': request,
-                }
-        )
+        serializer = PostModelSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
-            return Response('Success')
+            return Response(serializer.data, status=HTTP_201_CREATED)
         else:
-            return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
-    def perform_create(self, serializer):
-        serializer.save(username=request.user)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-#class CreatePostView(APIView):
-#    def post(self, request, format=None):
-#        serializer = PostModelSerializer(
-#                data=request.data,
-#                context={
-#                    'username': request.user
-#                    }
-#        )
-#        if serializer.is_valid():
-#            serializer.save()
-#            return Response(serializer.data, status=HTTP_201_CREATED)
-#        else:
-#            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-
-#    def get(self, request, format=None):
-#        queryset = PostModel.objects.all()
-#        serializer = PostModelSerializer(queryset, many=True)
-#        return Response(serializer.data)
+    def get(self, request, format=None):
+        queryset = PostModel.objects.all()
+        serializer = PostModelSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 # Get specific user's post
 class GetUserPostView(ListAPIView):
@@ -63,9 +42,9 @@ class GetUserPostView(ListAPIView):
     
     def get_queryset(self):
         # get username's value from URL, refer to urls.py
-        username = self.kwargs['username']
+        username_pk = self.kwargs['pk']
         return PostModel.objects.filter(
-            userdata__username=username
+            userdata=username_pk
         )
 
 class GetDetailPostView(RetrieveAPIView):
@@ -73,10 +52,10 @@ class GetDetailPostView(RetrieveAPIView):
     
     # Return an object instance for detailed view
     # detail here: https://bit.ly/3h5wPKV
-    def get_object(self, post_username, post_slug):
+    def get_object(self, post_username_pk, post_slug):
         try:
             return PostModel.objects.filter(
-                userdata__username=post_username
+                userdata=post_username_pk
             ).get(
                 slug=post_slug
             )
@@ -84,7 +63,7 @@ class GetDetailPostView(RetrieveAPIView):
             raise Http404
     
     # Get the object, pay attention to the url router
-    def get(self, request, post_username, post_slug, format=None):
-        queryset = self.get_object(post_username, post_slug)
+    def get(self, request, post_username_pk, post_slug, format=None):
+        queryset = self.get_object(post_username_pk, post_slug)
         serializer = self.serializer_class(queryset)
         return Response(serializer.data)

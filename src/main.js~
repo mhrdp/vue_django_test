@@ -6,7 +6,6 @@ import store from "./store";
 import axios from "axios";
 import axiosSetup from "./refresh_api.js";
 
-// a function to handle all Authorization headers related actions
 axiosSetup()
 
 axios.defaults.baseURL = "http://localhost:8000"

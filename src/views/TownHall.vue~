@@ -40,7 +40,6 @@
 <script>
 import axios from 'axios';
 import {toast} from 'bulma-toast';
-import {getAPI} from '../refresh_api';
 
 export default{
 	name: 'TownHall',
@@ -51,7 +50,7 @@ export default{
 			success: [],
 			timeline: [],
 
-			user_id: 1,
+			user_id: '',
 			
 			// Character count of the textarea
 			charLeft: 0,
@@ -66,15 +65,19 @@ export default{
 		console.log(localStorage.getItem('refreshToken'))
 	},
 	methods: {
-		getCurrentUser(){
-			//const token = localStorage.getItem('accessToken')
+		/* 
+		   * Normally, for every authenticated axios requests you need to put an Authorization header,
+		   * Like, axios
+		   			.post('url', {data}, {
+						headers: {'Authorization': token}
+					}),
+		   but the function in /src/refresh_api.js handle the headers' request
+		   * This made wrote a headers inside axios request optional, because that function already made global by utilizing it inside main.js
+		*/
 
-			getAPI
-				.get('/backdoor/api/user/', {
-					headers: {
-						'Authorization': `Bearer ${this.$store.state.accessToken}`
-					}
-				})
+		getCurrentUser(){
+			axios
+				.get('/backdoor/api/user/')
 				.then(response => {
 					console.log(response.data.id)
 					console.log(response.data.username)
@@ -102,16 +105,30 @@ export default{
 			}
 			
 			if(!this.errors.length){
+				await axios
+					.get('/backdoor/api/user/', {
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+					.then(response => {
+						this.user_id = response.data.id
+					})
+					.catch(error => {
+						console.log(error.response)
+					})
+
 				const formData = {
 					post: this.post,
+					//username: this.user_id,
 				}
 
-				await getAPI
+				await axios
 					.post('/backdoor/api/posts/', formData, {
-							headers: {
-								'Authorization': `Bearer ${this.$store.state.accessToken}`
-							}
-						})
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
 					.then(response => {
 						console.log(response.data)
 						if(response.data){

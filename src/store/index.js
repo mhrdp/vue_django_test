@@ -1,5 +1,7 @@
 import { createStore } from "vuex";
-import { axiosRefresh } from "@/refresh_api";
+//import { axiosRefresh } from "@/refresh_api";
+
+import axios from "axios";
 
 export default createStore({
   state: {
@@ -19,31 +21,32 @@ export default createStore({
 	},
 
 	updateAccessToken(state, access_token){
-		state.accessToken = access_token
+		state.accessToken = localStorage.setItem('accessToken', access_token)
 	},
 
-	logOut(state){
-		state.token = null
+	refreshAccess(state){
+		state.accessToken = localStorage.removeItem('accessToken')
+		state.refreshToken = localStorage.removeItem('refreshToken')
 		state.authenticated = false
 	},	
   },
   actions: {
-	  refreshToken(context){
-		  return new Promise((resolve, reject) => {
-			  axiosRefresh
-				.post('/backdoor/token/refresh/', {
-				  'refresh': context.state.refreshToken
-			  })
+	  // Refresh the token and update it to mutation
+	  async refreshToken({state, commit}){
+		  const refreshURL = '/backdoor/token/refresh/'
+		  try {
+			  await axios
+			  	.post(refreshURL, {
+					'refresh': state.refreshToken
+				})
 			  	.then(response => {
-					console.log('New token successfully generated!')
-					context.commit('updateAccessToken', response.data.access)
-					resolve(response.data.access)
+					if(response.status === 200){
+						commit('updateAccessToken', response.data.access)
+					}
 				})
-			  	.catch(error => {
-					console.log('Error in generating token')
-					reject(error)
-				})
-		  })
+		  } catch(e){
+			  console.log(e.response)
+		  }
 	  },
   },
   modules: {},

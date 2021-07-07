@@ -18,44 +18,23 @@ from .models import PostModel
 from .serializers import PostModelSerializer
 
 # Create your views here.
-class CreatePostView(ListCreateAPIView):
-    queryset = PostModel.objects.all()
-    serializer_class = PostModelSerializer
+class CreatePostView(APIView):
+    def post(self, request, format=None):
+        data = request.data
+        data['userdata'] = request.user.pk
 
-    def create(self, request):
-        serializer = self.serializer_class(
-                data=request.data,
-                context={
-                    'request': request,
-                }
-        )
+        serializer = PostModelSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
-            return Response('Success')
-        #else:
-            return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
-    def perform_create(self, serializer):
-        serializer.save(username=request.user)
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-#class CreatePostView(APIView):
-#    def post(self, request, format=None):
-#        serializer = PostModelSerializer(
-#                data=request.data,
-#                context={
-#                    'username': request.user
-#                    }
-#        )
-#        if serializer.is_valid():
-#            serializer.save()
-#            return Response(serializer.data, status=HTTP_201_CREATED)
-#        else:
-#            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-
-#    def get(self, request, format=None):
-#        queryset = PostModel.objects.all()
-#        serializer = PostModelSerializer(queryset, many=True)
-#        return Response(serializer.data)
+    def get(self, request, format=None):
+        queryset = PostModel.objects.all()
+        serializer = PostModelSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 # Get specific user's post
 class GetUserPostView(ListAPIView):
