@@ -8,30 +8,45 @@
 			</div>
 			
 			<div class="col-12 col-md-9">
-				<form method="POST" @submit.prevent="postPosts">
-					<textarea
-						class="form-control"
-						v-model="post"
-						placeholder="Thoughts?"
-						style="height:130px"
-						@keyup="minCharRequired"
-						name="post">
-					</textarea>
-					
-					<div class="row mt-2">
-						<div class="col-6">
-							<span v-if="charLeft < 300">
-								<span style="color:red">{{charLeft}}</span>
-							</span>
-							<span v-else>
-								<span style="color:green">{{charLeft}}</span>
-							</span>
-						</div>
-						<div class="col-6 d-flex justify-content-end">
-							<button class="btn btn-primary">Post</button>
-						</div>
+				<div v-if="identifier === activeUser">
+					<div class="alert alert-danger fs-7" role="alert" v-if="errors.length">
+						<p v-for="error in errors" v-bind:key="error">
+						  <i class="bi bi-exclamation-diamond-fill"></i> {{error}}
+						</p>
 					</div>
-				</form>
+		
+					<form method="POST" @submit.prevent="postPosts">
+						<textarea
+							class="form-control"
+							v-model="post"
+							placeholder="Thoughts?"
+							style="height:130px"
+							@keyup="minCharRequired"
+							name="post">
+						</textarea>
+						
+						<div class="row mt-2">
+							<div class="col-6">
+								<span v-if="charLeft < 300">
+									<span style="color:red">{{charLeft}}</span>
+								</span>
+								<span v-else>
+									<span style="color:green">{{charLeft}}</span>
+								</span>
+							</div>
+
+							<div class="col-6 d-flex justify-content-end">
+								<button class="btn btn-primary">Post</button>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div v-for="posts in timeline" v-bind:key="posts">
+					<h5>{{posts.userdata.username}}</h5>
+					<p class="subtitles p-1">{{posts.date_posted}}</p>
+					<p>{{posts.post}}</p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -42,7 +57,7 @@ import axios from 'axios';
 import {toast} from 'bulma-toast';
 
 export default{
-	name: 'TownHall',
+	name: 'Profile',
 	data(){
 		return {
 			post: '',
@@ -50,7 +65,8 @@ export default{
 			success: [],
 			timeline: [],
 
-			user_id: '',
+			indetifier: '',
+			activeUser: '',
 			
 			// Character count of the textarea
 			charLeft: 0,
@@ -58,11 +74,25 @@ export default{
 	},
 	mounted(){
 		document.title = 'Town Hall | Wlog'
+	
+		this.getTimeline()
 	},
 	created(){
-		this.user = localStorage.getItem('username')
-		console.log(localStorage.getItem('accessToken'))
-		console.log(localStorage.getItem('refreshToken'))
+		this.identifier = this.$route.params.username
+		this.activeUser = localStorage.getItem('username')
+
+	},
+	watch: {
+		// This is to watch for route change, so that the data could change dynamically
+		// If you not implementing this, when you change the url the data won't get updated
+		// unless you refresh the page.
+		// the function is as following: $route(to, from){ *conditions* }
+		$route(to){
+			if(to.name === 'Profile'){
+				this.getTimeline()
+				this.identifier = this.$route.params.username
+			}
+		}
 	},
 	methods: {
 		/* 
@@ -75,6 +105,7 @@ export default{
 		   * This made wrote a headers inside axios request optional, because that function already made global by utilizing it inside main.js
 		*/
 
+		/*
 		getCurrentUser(){
 			axios
 				.get('/backdoor/api/user/')
@@ -86,14 +117,33 @@ export default{
 					console.log(error.response)
 				})
 		},
+		*/
+		getTimeline(){
+			this.errors = []
+			const username = this.$route.params.username
+
+			axios
+				.get(`/backdoor/api/posts/${username}`)
+				.then(response => {
+					if(response.data){
+						this.timeline = response.data
+					}
+				})
+				.catch(error => {
+					if(error){
+						this.errors = 'There \'s a loading problem, please refresh your browser.'
+					}
+				})
+		},
 
 		minCharRequired(){
 			let left = this.post.length
 			this.charLeft = left
+
 			return this.charLeft
 		},
 	
-		async postPosts(){
+		async postPosts(e){
 			this.errors = []
 			this.success = []
 			
@@ -105,25 +155,12 @@ export default{
 			}
 			
 			if(!this.errors.length){
-				await axios
-					.get('/backdoor/api/user/', {
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					})
-					.then(response => {
-						this.user_id = response.data.id
-					})
-					.catch(error => {
-						console.log(error.response)
-					})
-
 				const formData = {
 					post: this.post,
 				}
 
 				await axios
-					.post('/backdoor/api/posts/', formData, {
+					.post('/backdoor/api/posts/', formData,  {
 						headers: {
 							'Content-Type': 'application/json'
 						}
@@ -143,19 +180,18 @@ export default{
 							})
 						}
 						
+						this.post = ''
+
+						// prevent form for submitting again
+						e.preventDefault()
 					})
 					.catch(error => {
 						if(error.response){
-							console.log(error)
 							for(const property in error.response.data){
 								this.errors.push(`${property}: ${error.response.data[property]}`)
 							}
-							console.log(JSON.stringify(error))
-						} else if(error.request){
-							//this.errors.push('Something went wrong!')
-							console.log(JSON.stringify(error))
 						} else {
-							console.log(error.message)
+							this.errors.push('Something went wrong!')
 						}
 					})
 			}

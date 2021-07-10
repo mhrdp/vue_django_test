@@ -82,11 +82,9 @@ export default {
 	  .then(response => {
 		const accessToken = response.data.access
 		const refreshToken = response.data.refresh
-
-		this.$store.commit('setAccessToken', accessToken)
-		this.$store.commit('setRefreshToken', refreshToken)
 		
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken
+		this.$store.commit('setAuth', true)
 		localStorage.setItem('accessToken', accessToken)
 		localStorage.setItem('refreshToken', refreshToken)
 		

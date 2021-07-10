@@ -13,9 +13,6 @@ class RegisteredUser(AbstractUser):
 
     def get_absolute_url(self):
         return f'/{self.username}/{self.id}/'
-        
-
-    
 
 class PremiumUser(models.Model):
     # Some extra features for VIP Users

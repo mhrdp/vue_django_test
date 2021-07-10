@@ -44,7 +44,10 @@ class GetUserPostView(ListAPIView):
         # get username's value from URL, refer to urls.py
         username = self.kwargs['username']
         return PostModel.objects.filter(
-            userdata__username=username
+            userdata__username=username,
+            posted=True,
+        ).order_by(
+            'date_created'
         )
 
 class GetDetailPostView(RetrieveAPIView):

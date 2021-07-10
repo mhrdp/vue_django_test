@@ -97,7 +97,8 @@ export default {
 			position: 'top-center',
 			animate: {in: 'fadeIn', out: 'fadeOut'},
 		})
-
+		
+		// Get user_id from token
 		const getTokenFromLocal = localStorage.getItem('accessToken')
 		const decodeToken = jwt_decode(getTokenFromLocal)
 		
@@ -107,6 +108,8 @@ export default {
 		}
 		
 		localStorage.setItem('user_id', userData['user_id'])
+
+		// get submitted username from login information
 		localStorage.setItem('username', this.username)
 		
 		const toPath = this.$route.query.to || '/dashboard'

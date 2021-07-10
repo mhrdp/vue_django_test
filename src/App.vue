@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg fixed-top">
+  <nav class="navbar navbar-expand-md fixed-top">
       <div class="container-fluid">
 		<div class="d-inline-block">
 			<div v-if="this.$store.state.authenticated">
@@ -18,26 +18,23 @@
 				<span class="navbar-toggler-icon"><i class="bi bi-three-dots-vertical"></i></span>
 			</a>
 		</div>
-		
-		<div v-if="!this.$store.state.authenticated" class="collapse navbar-collapse" id="navbarCollapse">
-			<div class="align-items-right">
-				<ul class="navbar-nav">
-					<li class="nav-item">
-						<router-link to="/login" class="nav-link">
-							Sign In
-						</router-link>
-					</li>
-					<li class="nav-item">
-						<router-link to="/register" class="nav-link">
-							Sign Up
-						</router-link>
-					</li>
-				</ul>
+
+			<div v-if="!this.$store.state.authenticated" class="collapse navbar-collapse flex-row-reverse" id="navbarCollapse">
+					<ul class="navbar-nav navbar-nav-scroll" style="--bs-scroll-height: 150px">
+						<li class="nav-item">
+							<router-link to="/login" class="nav-link">
+								Sign In
+							</router-link>
+						</li>
+						<li class="nav-item">
+							<router-link to="/register" class="nav-link">
+								Sign Up
+							</router-link>
+						</li>
+					</ul>
 			</div>
-		</div>
 		
-		<div v-else class="collapse navbar-collapse" id="navbarCollapse">
-			<div class="align-items-right">
+			<div v-else class="collapse navbar-collapse flex-row-reverse" id="navbarCollapse">
 				<ul class="navbar-nav">
 					<li class="nav-item">
 						<router-link to="/dashboard" class="nav-link">
@@ -45,8 +42,8 @@
 						</router-link>
 					</li>
 					<li class="nav-item">
-						<router-link to="/town-hall" class="nav-link">
-							Town Hall
+						<router-link v-bind:to="username" class="nav-link">
+							Profile
 						</router-link>
 					</li>
 					<li class="nav-item">
@@ -60,8 +57,7 @@
 					</li>
 				</ul>
 			</div>
-		</div>
-      </div>
+	  </div>
     </nav>
 	<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
 	  <div class="offcanvas-header">
@@ -116,6 +112,7 @@ export default {
   data() {
     return {
       showMobileMenu: false,
+	  username : '',
     }
   },
   beforeCreate(){
@@ -124,14 +121,20 @@ export default {
 		this.$store.commit('setAuth', true)
 	}
   },
+  created(){
+	this.username = localStorage.getItem('username')
+  },
   methods: {
 	signOut(){
 		// Refresh all credentials
 		localStorage.removeItem('accessToken')
+		localStorage.removeItem('refreshToken')
+		localStorage.removeItem('user_id')
+		localStorage.removeItem('username')
+
 		axios.defaults.headers.common['Authorization'] = ''
 		
 		this.$store.commit('setAuth', false)
-		
 		this.$router.push('/login')
 	}
   },

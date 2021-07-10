@@ -42,9 +42,12 @@ class GetUserPostView(ListAPIView):
     
     def get_queryset(self):
         # get username's value from URL, refer to urls.py
-        username_pk = self.kwargs['pk']
+        username = self.kwargs['username']
         return PostModel.objects.filter(
-            userdata=username_pk
+            userdata__username=username,
+            posted=True,
+        ).order_by(
+            '-date_created'
         )
 
 class GetDetailPostView(RetrieveAPIView):
@@ -52,10 +55,10 @@ class GetDetailPostView(RetrieveAPIView):
     
     # Return an object instance for detailed view
     # detail here: https://bit.ly/3h5wPKV
-    def get_object(self, post_username_pk, post_slug):
+    def get_object(self, post_username, post_slug):
         try:
             return PostModel.objects.filter(
-                userdata=post_username_pk
+                userdata__username=post_username
             ).get(
                 slug=post_slug
             )
@@ -63,7 +66,7 @@ class GetDetailPostView(RetrieveAPIView):
             raise Http404
     
     # Get the object, pay attention to the url router
-    def get(self, request, post_username_pk, post_slug, format=None):
-        queryset = self.get_object(post_username_pk, post_slug)
+    def get(self, request, post_username, post_slug, format=None):
+        queryset = self.get_object(post_username, post_slug)
         serializer = self.serializer_class(queryset)
         return Response(serializer.data)

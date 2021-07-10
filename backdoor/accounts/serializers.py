@@ -2,6 +2,14 @@ from rest_framework import serializers
 
 from .models import RegisteredUser, PremiumUser, Profile
 
+# This serializer only for showing post's author information
+class PostUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegisteredUser
+        fields = [
+            'id', 'username'
+        ]
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = RegisteredUser

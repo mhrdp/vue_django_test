@@ -39,8 +39,8 @@ const routes = [
 	}
   },
   {
-    path: "/town-hall",
-    name: "TownHall",
+	  path: "/:username",
+    name: "Profile",
     component: TownHall,
 	meta: {
 		asGuest: true,
