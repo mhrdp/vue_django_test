@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/Home.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Register from "../views/Register.vue";
-import TownHall from "../views/TownHall.vue";
+import Profile from "../views/Profile.vue";
 
 const routes = [
   {
@@ -41,7 +41,7 @@ const routes = [
   {
 	  path: "/:username",
     name: "Profile",
-    component: TownHall,
+    component: Profile,
 	meta: {
 		asGuest: true,
 		requireLogin: true,

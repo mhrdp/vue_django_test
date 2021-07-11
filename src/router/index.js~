@@ -39,7 +39,7 @@ const routes = [
 	}
   },
   {
-	  path: "/:pk",
+	  path: "/:username",
     name: "Profile",
     component: TownHall,
 	meta: {

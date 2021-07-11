@@ -5,7 +5,6 @@ from django.utils import timezone
 from ..accounts.models import RegisteredUser, MembersRoom
 from ..functions import get_random_slug
 
-import datetime
 
 class PostModel(models.Model):
     # Public's posts Model
@@ -23,7 +22,7 @@ class PostModel(models.Model):
     referred = models.IntegerField(default=0)
     slug = models.SlugField(max_length=16, null=True, blank=True, unique=True)
     posted = models.BooleanField(default=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(default=timezone.now())
     date_posted = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
@@ -34,7 +33,7 @@ class PostModel(models.Model):
         get_random_slug(self)
 
         if self.posted == True:
-            self.date_posted = datetime.datetime.now()
+            self.date_posted = timezone.now()
         else:
             self.date_posted = None
         
@@ -62,7 +61,7 @@ class CommunityOnlyPost(models.Model):
 
     slug = models.SlugField(max_length=16, null=True, blank=True, unique=True)
     posted = models.BooleanField(default=False)
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(default=timezone.now())
     date_posted = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
@@ -73,7 +72,7 @@ class CommunityOnlyPost(models.Model):
         get_random_slug(self)
 
         if self.posted == True:
-            self.date_posted = datetime.datetime.now()
+            self.date_posted = timezone.now()
         else:
             self.date_posted = None
         

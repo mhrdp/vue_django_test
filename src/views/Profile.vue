@@ -25,7 +25,7 @@
 							name="post">
 						</textarea>
 						
-						<div class="row mt-2">
+						<div class="row mt-2 mb-4">
 							<div class="col-6">
 								<span v-if="charLeft < 300">
 									<span style="color:red">{{charLeft}}</span>
@@ -43,9 +43,20 @@
 				</div>
 
 				<div v-for="posts in timeline" v-bind:key="posts">
-					<h5>{{posts.userdata.username}}</h5>
-					<p class="subtitles p-1">{{posts.date_posted}}</p>
-					<p>{{posts.post}}</p>
+					<div class="card mb-4">
+						<div class="card-body">
+							<h5><strong>{{posts.userdata.username}}</strong></h5>
+							<p class="text-muted fs-7 fw-light">
+								{{posts.date_posted.slice(0, 10)}}
+								<span>{{posts.date_posted.slice(11, 16)}}</span>
+							</p>
+							
+							<p>{{posts.post.slice(0, 300)}} <span>...</span></p>
+							<button class="btn btn-sm btn-secondary">
+								Read in full	
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -70,6 +81,7 @@ export default{
 			
 			// Character count of the textarea
 			charLeft: 0,
+			expands: false,
 		}
 	},
 	mounted(){
@@ -118,6 +130,7 @@ export default{
 				})
 		},
 		*/
+
 		getTimeline(){
 			this.errors = []
 			const username = this.$route.params.username
@@ -203,5 +216,9 @@ export default{
 <style scoped>
 .outside.row {
 	padding: 100px 15px 50px 15px;
+}
+
+.fs-7 {
+	font-size: .75rem;
 }
 </style>
