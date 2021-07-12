@@ -81,14 +81,14 @@
 		  </a>
 		</div>
 		
-		<h6 class="card-subtitle">COMMUNITY</h6>
+		<h6 class="card-subtitle mt-4">COMMUNITY</h6>
 		<div class="list-group list-group-flush">
 		  <a class="list-group-item list-group-item-action dashboard-active" href="/dashboard">
 			<i class="bi bi-tv-fill p-2"></i>Control Room
 		  </a>
-		  <a class="list-group-item list-group-item-action private-active" href="#">
+		  <router-link v-bind:to="username" class="list-group-item list-group-item-action private-active">
 			<i class="bi bi-unlock-fill p-2"></i>Private Space
-		  </a>
+		  </router-link>
 		  <a class="list-group-item list-group-item-action community-active" href="#">
 			<i class="bi bi-people-fill p-2"></i>Community Space
 		  </a>
@@ -122,7 +122,7 @@ export default {
 	}
   },
   created(){
-	this.username = localStorage.getItem('username')
+	this.username = `/${localStorage.getItem('username')}`
   },
   methods: {
 	signOut(){

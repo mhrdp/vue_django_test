@@ -41,20 +41,31 @@
 						</div>
 					</form>
 				</div>
-
-				<div v-for="posts in timeline" v-bind:key="posts">
-					<div class="card mb-4">
-						<div class="card-body">
-							<h5><strong>{{posts.userdata.username}}</strong></h5>
-							<p class="text-muted fs-7 fw-light">
-								{{posts.date_posted.slice(0, 10)}}
-								<span>{{posts.date_posted.slice(11, 16)}}</span>
-							</p>
-							
-							<p>{{posts.post.slice(0, 300)}} <span>...</span></p>
-							<button class="btn btn-sm btn-secondary">
-								Read in full	
-							</button>
+			
+				<div v-if="isLoading">
+					<div class="d-flex justify-content-center m-5">
+						<div class="spinner-border text-info" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
+				</div>
+				<div v-else>
+					<div v-for="posts in timeline" v-bind:key="posts">
+						<div class="card mb-4">
+							<div class="card-body">
+								<h5><strong>{{posts.userdata.username}}</strong></h5>
+								<p class="text-muted fs-7 fw-light">
+									{{posts.date_posted.slice(0, 10)}}
+									<span>{{posts.date_posted.slice(11, 16)}}</span>
+								</p>
+								
+								<p>{{posts.post.slice(0, 300)}} <span>...</span></p>
+								<router-link v-bind:to="posts.get_absolute_url">
+									<button class="btn btn-sm btn-secondary">
+										Read in full	
+									</button>
+								</router-link>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -81,7 +92,7 @@ export default{
 			
 			// Character count of the textarea
 			charLeft: 0,
-			expands: false,
+			isLoading: false,
 		}
 	},
 	mounted(){
@@ -131,11 +142,13 @@ export default{
 		},
 		*/
 
-		getTimeline(){
+		async getTimeline(){
 			this.errors = []
 			const username = this.$route.params.username
 
-			axios
+			this.isLoading = true
+
+			await axios
 				.get(`/backdoor/api/posts/${username}`)
 				.then(response => {
 					if(response.data){
@@ -144,9 +157,11 @@ export default{
 				})
 				.catch(error => {
 					if(error){
-						this.errors = 'There \'s a loading problem, please refresh your browser.'
+						this.errors.push('There \'s a loading problem, please refresh your browser.')
 					}
 				})
+
+			this.isLoading = false
 		},
 
 		minCharRequired(){
@@ -159,6 +174,7 @@ export default{
 		async postPosts(e){
 			this.errors = []
 			this.success = []
+			
 			
 			if(this.post === ''){
 				this.errors.push('Post field can\'t be empty')
@@ -179,7 +195,6 @@ export default{
 						}
 					})
 					.then(response => {
-						console.log(response.data)
 						if(response.data){
 							toast({
 								message: 'Your post has been successfully posted',

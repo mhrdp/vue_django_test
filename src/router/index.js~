@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/Home.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Register from "../views/Register.vue";
-import TownHall from "../views/TownHall.vue";
+import Profile from "../views/Profile.vue";
+import PostDetail from "../views/PostDetail.vue";
+
 
 const routes = [
   {
@@ -39,14 +41,23 @@ const routes = [
 	}
   },
   {
-	  path: "/:username",
+	path: "/:username",
     name: "Profile",
-    component: TownHall,
+    component: Profile,
 	meta: {
 		asGuest: true,
 		requireLogin: true,
 	}
   },
+  {
+	path: "/post/:post_slug",
+	name: "PostDetail",
+	component: PostDetail,
+	meta: {
+		asGuest: true,
+		requireLogin: true,
+	}
+  }
 ];
 
 const router = createRouter({

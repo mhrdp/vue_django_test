@@ -3,6 +3,8 @@ import Login from "../views/Home.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Register from "../views/Register.vue";
 import Profile from "../views/Profile.vue";
+import PostDetail from "../views/PostDetail.vue";
+
 
 const routes = [
   {
@@ -39,7 +41,7 @@ const routes = [
 	}
   },
   {
-	  path: "/:username",
+	path: "/:username",
     name: "Profile",
     component: Profile,
 	meta: {
@@ -47,6 +49,15 @@ const routes = [
 		requireLogin: true,
 	}
   },
+  {
+	  path: "/post/:username/:post_slug",
+	name: "PostDetail",
+	component: PostDetail,
+	meta: {
+		asGuest: true,
+		requireLogin: true,
+	}
+  }
 ];
 
 const router = createRouter({

@@ -40,7 +40,7 @@ class PostModel(models.Model):
         super(PostModel, self).save(*args, **kwargs)
     
     def get_absolute_url(self):
-        return f'/post/{self.slug}/'
+        return f'/post/{self.userdata.username}/{self.slug}/'
 
 class CommunityOnlyPost(models.Model):
     # Member only post model
