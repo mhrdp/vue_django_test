@@ -19,7 +19,6 @@ class PostModel(models.Model):
                 )
             ]
         )
-    referred = models.IntegerField(default=0)
     slug = models.SlugField(max_length=16, null=True, blank=True, unique=True)
     posted = models.BooleanField(default=True)
     date_created = models.DateTimeField(default=timezone.now())

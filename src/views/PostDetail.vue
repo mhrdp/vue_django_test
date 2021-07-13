@@ -12,13 +12,29 @@
 				<div v-if="post">
 					<div class="card">
 						<div class="card-body">
-							<h4 class="card-title">Post's Detail</h4>
+							<div class="card-header mb-2">
+								<h4 class="card-title">Post's Detail</h4>
+							</div>
+
 							<h5>{{post.userdata.username}}</h5>
 							<p class="text-muted fs-7 fw-light">
 								{{post.date_posted.slice(0, 10)}}
 								<span>{{post.date_posted.slice(11, 16)}}</span>
 							</p>
 							<p>{{post.post}}</p>
+
+							<div class="container d-flex justify-content-center">
+								<div class="col-3">
+									<a href="#" class="btn btn-link btn-sm">
+										<i class="bi bi-pen fs-5" title="Refer this article"></i>
+									</a>
+								</div>
+								<div class="col-3">
+									<a href="#" class="btn btn-link btn-sm">
+										<i class="bi bi-bookmarks fs-5" title="Bookmark this"></i>
+									</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

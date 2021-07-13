@@ -69,6 +69,17 @@
 						</div>
 					</div>
 				</div>
+
+				<div v-if="loadingNext">
+					<div class="d-flex justify-content-center m-5">
+						<div class="spinner-border text-info" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
+				</div>
+				<div v-else>
+					<!-- return none -->
+				</div>
 			</div>
 		</div>
 	</div>
@@ -89,16 +100,34 @@ export default{
 
 			indetifier: '',
 			activeUser: '',
+			page: 1,
+			hasNext: true,
+			loadingNext: false,
 			
 			// Character count of the textarea
 			charLeft: 0,
-			isLoading: false,
+			isLoading: true,
 		}
+	},
+	components: {
 	},
 	mounted(){
 		document.title = 'Town Hall | Wlog'
-	
 		this.getTimeline()
+
+		window.onscroll = () => {
+			let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
+
+			if(bottomOfWindow && this.hasNext){
+				// Activate spinner when reaching the bottom of the page
+				// Then deactivate it after the API responded,
+				// The call to deactivate it was inside getTimeline() function in methods:{...}
+				this.loadingNext = true
+
+				this.page += 1
+				this.getTimeline()
+			}
+		}
 	},
 	created(){
 		this.identifier = this.$route.params.username
@@ -146,13 +175,28 @@ export default{
 			this.errors = []
 			const username = this.$route.params.username
 
-			this.isLoading = true
-
 			await axios
-				.get(`/backdoor/api/posts/${username}`)
+				.get(`/backdoor/api/posts/${username}/?page=${this.page}`)
 				.then(response => {
 					if(response.data){
-						this.timeline = response.data
+						// Deactive spinner when API already returning a response
+						// To activate the spinner, use the function in 'mounted(){...}'
+						this.loadingNext = false
+						this.hasNext = false
+
+						if(response.data.next){
+							this.hasNext = true
+						}
+						
+						/*
+							Append the data into variable so the page won't reloading
+							each time it change the page
+							- response.data return an Object
+							- response.data.result return a List/an Array
+						*/
+						for(let i = 0; i < response.data.results.length; i++){
+							this.timeline.push(response.data.results[i])
+						}
 					}
 				})
 				.catch(error => {
@@ -209,6 +253,7 @@ export default{
 						}
 						
 						this.post = ''
+						this.charLeft = 0
 
 						// prevent form for submitting again
 						e.preventDefault()
@@ -223,7 +268,7 @@ export default{
 						}
 					})
 			}
-		}
+		},
 	},
 }
 </script>

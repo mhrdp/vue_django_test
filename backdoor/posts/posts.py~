@@ -8,7 +8,8 @@ from rest_framework.generics import (
     ListAPIView, ListCreateAPIView, RetrieveAPIView
 )
 
-from rest_framework.permissions import AllowAny
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny 
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from rest_framework.views import APIView
@@ -39,16 +40,18 @@ class CreatePostView(APIView):
 # Get specific user's post
 class GetUserPostView(ListAPIView):
     serializer_class = PostModelSerializer
-    
+    paginator = PageNumberPagination()
+    pagitator.page_size = 3
+
     def get_queryset(self):
         # get username's value from URL, refer to urls.py
         username = self.kwargs['username']
         return PostModel.objects.filter(
             userdata__username=username,
             posted=True,
-        ).order_by(
-            'date_created'
-        )
+            ).order_by(
+            '-date_posted'
+            )
 
 class GetDetailPostView(RetrieveAPIView):
     serializer_class = PostModelSerializer

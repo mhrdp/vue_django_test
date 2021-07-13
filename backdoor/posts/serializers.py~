@@ -13,7 +13,8 @@ class PostModelSerializer(serializers.ModelSerializer):
             'date_created', 'date_posted', 'get_absolute_url',
         ]
    
-   # To show UserSerializer inside PostModelSerializer
+   # To show PostUserSerializer inside PostModelSerializer
+   # If you not rewriting to_representation method, you'll get trouble when saving new data
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['userdata'] = PostUserSerializer(instance.userdata).data

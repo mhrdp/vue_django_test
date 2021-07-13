@@ -9,7 +9,7 @@ class PostModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostModel
         fields = [
-            'id','userdata', 'post', 'referred', 'slug', 'posted',
+            'id','userdata', 'post', 'slug', 'posted',
             'date_created', 'date_posted', 'get_absolute_url',
         ]
    
