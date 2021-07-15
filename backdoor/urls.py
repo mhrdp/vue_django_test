@@ -29,6 +29,10 @@ urlpatterns = [
     path('api/posts/<str:username>/', posts.GetUserPostView.as_view()),
     path('api/posts/<str:post_username>/<slug:post_slug>/', posts.GetDetailPostView.as_view()),
 
+    path('api/posts/referred/', posts.CreateReferredPostView.as_view()),
+    path('api/posts/<str:post_username>/<slug:post_slug>/referto/<slug:referred_post_slug>', posts.GetReferredPostView.as_view()),
+    
+
     path('api/user/', users_api.CurrentUserView.as_view()),
 
     # REST Framework built-in login page for testing

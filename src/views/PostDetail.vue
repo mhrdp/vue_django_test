@@ -25,7 +25,7 @@
 
 							<div class="container d-flex justify-content-center">
 								<div class="col-3">
-									<a href="#" class="btn btn-link btn-sm">
+									<a href="#" class="btn btn-link btn-sm" @click="referPost">
 										<i class="bi bi-pen fs-5" title="Refer this article"></i>
 									</a>
 								</div>
@@ -79,6 +79,10 @@ export default {
 		//this.username = this.$route.params.username
 	},
 	methods: {
+		referPost(){
+			
+		},
+
 		async getPost(){
 			this.errors = []
 			this.isLoading = true

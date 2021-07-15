@@ -5,7 +5,7 @@ from django.views.generic import View
 from rest_framework import serializers
 
 from rest_framework.generics import (
-    ListAPIView, ListCreateAPIView, RetrieveAPIView
+    ListAPIView, ListCreateAPIView, RetrieveAPIView, CreateAPIView
 )
 
 from rest_framework.pagination import PageNumberPagination
@@ -16,10 +16,11 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from .models import PostModel
-from .serializers import PostModelSerializer
+from .serializers import PostModelSerializer, ReferredPostSerializer
 
 # Create your views here.
 class CreatePostView(APIView):
+    # It's more appropriate to use CreateAPIView here'
     def post(self, request, format=None):
         data = request.data
         data['userdata'] = request.user.pk
@@ -71,5 +72,39 @@ class GetDetailPostView(RetrieveAPIView):
     # Get the object, pay attention to the url router
     def get(self, request, post_username, post_slug, format=None):
         queryset = self.get_object(post_username, post_slug)
+        serializer = self.serializer_class(queryset)
+        return Response(serializer.data)
+
+class CreateReferredPostView(CreateAPIView):
+    serializer_class = ReferredPostSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        data['userdata'] = request.user
+
+        serializer = self.serializer_class(data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+class GetReferredPostView(RetrieveAPIView):
+    serializer_class = ReferredPostSerializer
+
+    def get_object(self, post_username, post_slug, referred_post_slug):
+        try:
+            return ReferredPost.objects.filter(
+                userdata__username=post_username,
+                referred_post__slug=referred_post_slug,
+            ).get(
+                slug=post_slug
+            )
+        except ReferredPost.DoesNotExist:
+            raise Http404
+    
+    def get(self, request, post_username, post_slug, referred_post_slug):
+        queryset = self.get_object(post_username, post_slug, referred_post_slug)
         serializer = self.serializer_class(queryset)
         return Response(serializer.data)
