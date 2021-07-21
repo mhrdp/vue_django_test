@@ -5,6 +5,7 @@ import Register from "../views/Register.vue";
 import Profile from "../views/Profile.vue";
 import PostDetail from "../views/PostDetail.vue";
 import ReferredPost from "../views/ReferredPost.vue";
+import ReferredPostDetail from "../views/ReferredPostDetail.vue";
 
 const routes = [
   {
@@ -50,9 +51,18 @@ const routes = [
 	}
   },
   {
-	path: "/:username/referred",
+	path: "/post/:username/referred",
     name: "ReferedPost",
     component: ReferredPost,
+	meta: {
+		asGuest: true,
+		requireLogin: true,
+	}
+  },
+  {
+	path: "/post/:username/:post_slug/referto/:referred_post_slug",
+	name: "ReferredPostDetail",
+	component: ReferredPostDetail,
 	meta: {
 		asGuest: true,
 		requireLogin: true,

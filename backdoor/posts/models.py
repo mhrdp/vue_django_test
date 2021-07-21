@@ -67,7 +67,7 @@ class ReferredPost(models.Model):
         super(ReferredPost, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return f'/post/{self.slug}/referto/{self.referred_post.slug}/'
+        return f'/post/{self.userdata.username}/{self.slug}/referto/{self.referred_post.slug}/'
 
 class CommunityOnlyPost(models.Model):
     # Member only post model

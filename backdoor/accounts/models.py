@@ -12,7 +12,7 @@ class RegisteredUser(AbstractUser):
     email = models.EmailField(_('Email Address'), blank=False, null=False)
 
     def get_absolute_url(self):
-        return f'/{self.username}/{self.id}/'
+        return f'/{self.username}/'
 
 class PremiumUser(models.Model):
     # Some extra features for VIP Users

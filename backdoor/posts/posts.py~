@@ -80,7 +80,7 @@ class CreateReferredPostView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        data['userdata'] = request.user
+        data['userdata'] = request.user.pk
 
         serializer = self.serializer_class(data=data)
         

@@ -27,7 +27,7 @@ class ReferredPostOriginSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReferredPost
         fields = [
-            'id', 'slug',
+            'id', 'slug', 'get_absolute_url', 'post',
         ]
 
 class ReferredPostSerializer(serializers.ModelSerializer):
@@ -44,5 +44,5 @@ class ReferredPostSerializer(serializers.ModelSerializer):
         rep['referred_post'] = ReferredPostOriginSerializer(instance.referred_post).data
         return rep
 
-    def create(self, validate_data):
+    def create(self, validated_data):
         return ReferredPost.objects.create(**validated_data)

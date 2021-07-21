@@ -53,7 +53,10 @@
 					<div v-for="posts in timeline" v-bind:key="posts">
 						<div class="card mb-4">
 							<div class="card-body">
-								<h5><strong>{{posts.userdata.username}}</strong></h5>
+								<router-link v-bind:to="posts.userdata.get_absolute_url" class="link-dark">
+									<h5><strong>{{posts.userdata.username}}</strong></h5>
+								</router-link>
+
 								<p class="text-muted fs-7 fw-light">
 									{{posts.date_posted.slice(0, 10)}}
 									<span>{{posts.date_posted.slice(11, 16)}}</span>
