@@ -23,17 +23,26 @@ class PostModelSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return PostModel.objects.create(**validated_data)
 
+class ReferredPostOriginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReferredPost
+        fields = [
+            'id', 'slug',
+        ]
+
 class ReferredPostSerializer(serializers.ModelSerializer):
     class Meta:
+        model = ReferredPost
         fields = [
             'userdata', 'referred_post', 'post', 'slug', 'posted',
             'date_created', 'date_posted'
         ]
 
     def to_representation(self, instance):
-        rep = super().to_representaion(instance)
+        rep = super().to_representation(instance)
         rep['userdata'] = PostUserSerializer(instance.userdata).data
+        rep['referred_post'] = ReferredPostOriginSerializer(instance.referred_post).data
         return rep
 
-    def create(self, validate_data):
+    def create(self, validated_data):
         return ReferredPost.objects.create(**validated_data)

@@ -11,16 +11,4 @@ axiosSetup()
 
 axios.defaults.baseURL = "http://localhost:8000"
 
-function filter(text, length, clamp){
-	clamp = clamp || "...";
-	let node = document.createElement('div');
-	node.innerHTML = text;
-	let content = node.textContent;
-
-	return content.length > length ? content.slice(0, length) + clamp : content;
-};
-
-const vue = createApp({})
-vue.filter('truncate', filter);
-
 createApp(App).use(store).use(router).mount("#app");

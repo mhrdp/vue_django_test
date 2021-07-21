@@ -15,7 +15,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from .models import PostModel
+from .models import PostModel, ReferredPost
 from .serializers import PostModelSerializer, ReferredPostSerializer
 
 # Create your views here.
@@ -80,15 +80,27 @@ class CreateReferredPostView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        data['userdata'] = request.user
+        data['userdata'] = request.user.pk
 
-        serializer = self.serializer_class(data)
+        serializer = self.serializer_class(data=data)
         
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+class GetUserReferredPostView(ListAPIView):
+    serializer_class = ReferredPostSerializer
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return ReferredPost.objects.filter(
+            userdata__username=username,
+            posted=True
+        ).order_by(
+            '-date_posted'
+        )
 
 class GetReferredPostView(RetrieveAPIView):
     serializer_class = ReferredPostSerializer

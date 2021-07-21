@@ -6,6 +6,9 @@ import store from "./store";
 import axios from "axios";
 import axiosSetup from "./refresh_api.js";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
+
 // a function to handle all Authorization headers related actions
 axiosSetup()
 

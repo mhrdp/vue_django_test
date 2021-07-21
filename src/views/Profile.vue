@@ -112,7 +112,7 @@ export default{
 	components: {
 	},
 	mounted(){
-		document.title = 'Town Hall | Wlog'
+		document.title = `${localStorage.getItem('username')}'s Profile | Wlog`
 		this.getTimeline()
 
 		window.onscroll = () => {
