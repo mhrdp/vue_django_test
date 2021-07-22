@@ -16,7 +16,9 @@
 								<h4 class="card-title">Post's Detail</h4>
 							</div>
 							
-								<h5>{{post.userdata.username}}</h5>
+								<router-link v-bind:to="post.userdata.get_absolute_url" class="link-dark">
+									<h5>{{post.userdata.username}}</h5>
+								</router-link>
 								<p class="text-muted fs-7 fw-light">
 									{{post.date_posted.slice(0, 10)}}
 									<span>{{post.date_posted.slice(11, 16)}}</span>
@@ -49,7 +51,9 @@
 									<p class="fs-7">Referred post:</p>
 									<div class="card mb-4">
 										<div class="card-body">
-											<h6 class="text-muted"><b>{{post.userdata.username}}</b></h6>
+											<router-link v-bind:to="post.userdata.get_absolute_url" class="link-dark">
+												<h6 class="text-muted"><b>{{post.userdata.username}}</b></h6>
+											</router-link>
 											<p class="text-muted fs-7 fw-light">{{post.post.slice(0, 150)}} ...</p>
 										</div>
 									</div>
@@ -142,7 +146,7 @@ export default {
 							animate: {in: 'fadeIn', out: 'fadeOut'},
 						})
 
-						this.$router.push(`/${username}/referred`)
+						this.$router.push(`/post/${username}/referred`)
 					}
 				})
 				.catch(error => {
@@ -163,7 +167,6 @@ export default {
 			await axios
 				.get(`backdoor/api/posts/${username}/${post_slug}`)
 				.then(response => {
-					console.log(response.data)
 					if(response.data){
 						this.post = response.data
 					}

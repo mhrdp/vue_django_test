@@ -7,7 +7,7 @@ class PostUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = RegisteredUser
         fields = [
-            'id', 'username'
+            'id', 'username', 'get_absolute_url',
         ]
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'username', 'password', 'email', 'first_name', 'last_name',
             'user_permissions', 'is_staff', 'is_active', 'is_superuser',
-            'last_login', 'date_joined',
+            'last_login', 'date_joined', 'get_absolute_url'
         ]
         
         read_only_fields = (

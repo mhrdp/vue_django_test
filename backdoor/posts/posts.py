@@ -92,6 +92,8 @@ class CreateReferredPostView(CreateAPIView):
 
 class GetUserReferredPostView(ListAPIView):
     serializer_class = ReferredPostSerializer
+    paginator = PageNumberPagination()
+    paginator.page_size = 3
 
     def get_queryset(self):
         username = self.kwargs['username']
