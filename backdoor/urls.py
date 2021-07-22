@@ -31,7 +31,7 @@ urlpatterns = [
 
     path('api/referred/', posts.CreateReferredPostView.as_view()),
     path('api/referred/<str:username>/', posts.GetUserReferredPostView.as_view()),
-    path('api/referred/<str:post_username>/<slug:post_slug>/referto/<slug:referred_post_slug>', posts.GetReferredPostView.as_view()),
+    path('api/referred/<str:post_username>/<slug:post_slug>/referto/<slug:referred_post_slug>/', posts.GetReferredPostView.as_view()),
     
 
     path('api/user/', users_api.CurrentUserView.as_view()),

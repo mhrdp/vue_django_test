@@ -20,20 +20,19 @@
 						<span>{{post.date_posted.slice(11, 16)}}</span></p>
 
 						<p>{{post.post.slice(0, 300)}}...</p>
-
-						<div class="card">
-							<div class="card-body">
-								<p class="text-muted">
-									Refer to post #<strong>{{post.referred_post.slug}}</strong><br/>
-									<span class="fs-7">{{post.referred_post.post.slice(0, 100)}}...</span>
-								</p>
-							</div>
-						</div>
-						
-						<router-link v-bind:to="post.get_absolute_url">
-							<button class="btn btn-primary mt-3">Read in full</button>
-						</router-link>
 					</div>
+					<div class="card m-2">
+						<div class="card-body">
+							<p class="text-muted">
+								Refer to post #<strong>{{post.referred_post.slug}}</strong><br/>
+								<span class="fs-7">{{post.referred_post.post.slice(0, 100)}}...</span>
+							</p>
+						</div>
+					</div>
+					
+					<router-link v-bind:to="post.get_absolute_url">
+						<button class="btn btn-primary mt-3">Read in full</button>
+					</router-link>
 				</div>
 
 				<div v-if="loadingNext">
