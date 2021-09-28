@@ -39,6 +39,10 @@ urlpatterns = [
     # REST Framework built-in login page for testing
     # Accessed by ../backdoor/rest/login or ../backdor/rest/logout
     path('rest/', include('rest_framework.urls')),
+
+    # Token generator by simplejwt
+    # simplejwt MUST BE placed at root urls or urls outside the apps folder
+    # or else it won't work for whatever reason.
     path('token/', users_api.TokenPOSTMethod.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
 ]
