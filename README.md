@@ -28,7 +28,6 @@ The tools that act as a core of the site and responsible for operating the main 
 Complimentary tools to complete the site's features.
 - Bootstrap Icons
 - Bulma Toast
->>>>>>> 7e6ec9d979596eba33ebdc0aafa0f3afa9dc1be6
 
 ## Project setup
 ```
